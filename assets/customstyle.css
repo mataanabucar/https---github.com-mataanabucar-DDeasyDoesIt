@@ -7,13 +7,15 @@ html {
   overflow-x: hidden;
 }
 
-/* Default: lock scroll for coming-soon surfaces; allow scroll when contact is allowed */
-body:not(.contact-allowed) {
+/* Lock scroll only on the coming-soon homepage */
+body.coming-soon-mode.is-homepage {
   overflow-y: hidden;
   overscroll-behavior-y: none;
 }
-body.coming-soon-mode.is-contact-page{
-	overflow-y: auto !important;
+
+body.coming-soon-mode:not(.is-homepage) {
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
 }
 @media screen and (min-width: 750px) {
   body.coming-soon-mode.is-homepage #header-group {
@@ -555,4 +557,7 @@ body.coming-soon-mode .hero__logo {
 
 .shopify-section-group-footer-group:nth-child(2) {
 	display: none !important;
+}
+.footer-utilities__group-copyright *{
+	color: #00ffcb !important;
 }
