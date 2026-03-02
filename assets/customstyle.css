@@ -2,8 +2,17 @@
  * Custom styles
  * Add your own CSS below.
  */
-html{
-	overflow: hidden;
+/* Limit background bleed horizontally; allow per-page control of vertical scroll */
+html {
+  overflow-x: hidden;
+}
+
+/* Default: lock scroll for coming-soon surfaces; allow scroll when contact is allowed */
+body:not(.contact-allowed) {
+  overflow-y: hidden;
+}
+body .contact-allowed{
+	overflow-y: auto !important;
 }
 @media screen and (min-width: 750px) {
   body.coming-soon-mode.is-homepage #header-group {
@@ -543,3 +552,6 @@ body.coming-soon-mode .hero__logo {
   }
 
 
+.shopify-section-group-footer-group:nth-child(2) {
+	display: none !important;
+}
