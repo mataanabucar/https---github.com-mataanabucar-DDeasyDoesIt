@@ -533,6 +533,9 @@
           {% render 'hero-logo', logo_color: section.settings.logo_color %}
         </div>
       </div>
+      {% if settings.coming_soon_mode and settings.coming_soon_message != blank %}
+        <p class="hero__coming-soon">{{ settings.coming_soon_message }}</p>
+      {% endif %}
       {% content_for 'blocks' %}
     </div>
   </div>
@@ -607,6 +610,26 @@
 
   .hero__logo-img svg {
     display: block;
+  }
+
+  .hero__coming-soon {
+    margin: 0 auto 24px;
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #00ffcb;
+    text-shadow: 0 0 15px rgba(0, 255, 203, 0.7);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.8));
+    padding: 0.5em 1.25em;
+    border-radius: 999px;
+    position: relative;
+    z-index: var(--layer-flat, 10);
+    width: min(92vw, 520px);
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
   }
 
   .hero__content-wrapper .group-block-content {

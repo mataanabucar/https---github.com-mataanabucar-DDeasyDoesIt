@@ -2284,5 +2284,23 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "Coming soon mode",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "coming_soon_mode",
+        "label": "Enable coming soon mode",
+        "default": false,
+        "info": "Locks the storefront to the homepage and disables storefront clicks."
+      },
+      {
+        "type": "text",
+        "id": "coming_soon_message",
+        "label": "Homepage message",
+        "default": "Coming Spring 2026"
+      }
+    ]
   }
 ]

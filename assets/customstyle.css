@@ -2,7 +2,9 @@
  * Custom styles
  * Add your own CSS below.
  */
-
+html{
+	overflow: hidden;
+}
 /* Hero: fixed background media on desktop only */
 @media screen and (min-width: 750px) {
   .hero__media-wrapper.hero__media-wrapper--desktop,
@@ -13,6 +15,34 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  body.coming-soon-mode .hero__content-wrapper {
+    padding-top: 48px;
+  }
+
+  body.coming-soon-mode .hero__logo {
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+
+  body.coming-soon-mode .hero__logo-img {
+    max-width: clamp(260px, 38vw, 640px) !important;
+    margin-inline: auto;
+  }
+
+  body.coming-soon-mode .hero__logo-img img,
+  body.coming-soon-mode .hero__logo-img svg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 60vh !important;
+    top: 0 !important;
+  }
+
+  html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
+    margin-top: 0;
   }
 }
 
@@ -82,6 +112,54 @@ header-component,
   color: #000 !important;
 }
 
+html:not(.shopify-design-mode) body.coming-soon-mode a,
+html:not(.shopify-design-mode) body.coming-soon-mode button,
+html:not(.shopify-design-mode) body.coming-soon-mode summary,
+html:not(.shopify-design-mode) body.coming-soon-mode input,
+html:not(.shopify-design-mode) body.coming-soon-mode select,
+html:not(.shopify-design-mode) body.coming-soon-mode textarea,
+html:not(.shopify-design-mode) body.coming-soon-mode [role="button"] {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
+    display: block;
+    width: min(92vw, 765px);
+    margin: 12px auto 0;
+    padding: 28px 22px;
+    text-align: center;
+    position: relative;
+    z-index: 50;
+    color: #00ffcb;
+    text-shadow: 0 0 15px rgba(0, 255, 203, 0.7);
+    background: radial-gradient(circle at center, rgb(19 33 65 / 45%), rgba(0, 0, 0, 0.8));
+    /* background-color: rgba(255, 255, 255, 0.72); */
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    top: 0;
+    border-radius: 36px;
+    /* backdrop-filter: blur(10px); */
+}
+.hero__coming-soon {
+    margin: 0 auto 24px;
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #00ffcb;
+    text-shadow: 0 0 15px rgba(0, 255, 203, 0.7);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.8));
+    padding: 0.5em 1.25em;
+    border-radius: 999px;
+    position: relative;
+    z-index: var(--layer-flat, 10);
+    width: min(92vw, 520px);
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+}
 @media screen and (max-width: 749px) {
   .hero__media-wrapper.hero__media-wrapper--desktop,
   .hero__media-wrapper.hero__media-wrapper--mobile {
@@ -128,6 +206,14 @@ header-component,
     justify-content: center;
     width: auto !important;
     margin-inline: auto;
+  }
+
+  html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
+    max-width: calc(100vw - 32px);
+    padding: 10px 14px;
+    font-size: clamp(1.4rem, 8vw, 2.25rem);
+    margin-top: 8px;
+    top: 0;
   }
 
   header-component,

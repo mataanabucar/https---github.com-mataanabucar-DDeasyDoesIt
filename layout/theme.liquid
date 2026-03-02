@@ -1,4 +1,11 @@
 <!doctype html>
+{% liquid
+  assign coming_soon_mode = settings.coming_soon_mode
+  assign is_homepage = false
+  if template.name == 'index' or request.path == routes.root_url
+    assign is_homepage = true
+  endif
+%}
 <html
   {% if request.design_mode %}
     class="shopify-design-mode"
@@ -36,9 +43,15 @@
     {% endif %}
 
     {{ content_for_header }}
+
+    {% if coming_soon_mode and request.design_mode == false and is_homepage == false %}
+      <script>
+        window.location.replace('/');
+      </script>
+    {% endif %}
   </head>
 
-  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} section-bg-override">
+  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} section-bg-override{% if coming_soon_mode %} coming-soon-mode{% endif %}{% if is_homepage %} is-homepage{% endif %}">
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
     <div id="header-group">
       {% sections 'header-group' %}
@@ -110,6 +123,30 @@
           headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
         }
       })();
+
+      {% if coming_soon_mode and request.design_mode == false %}
+        (function lockComingSoonNavigation() {
+          document.addEventListener(
+            'click',
+            function (event) {
+              const target = event.target.closest('a, button, summary, input, select, textarea, [role="button"]');
+              if (!target) return;
+              event.preventDefault();
+              event.stopPropagation();
+            },
+            true
+          );
+
+          document.addEventListener(
+            'submit',
+            function (event) {
+              event.preventDefault();
+              event.stopPropagation();
+            },
+            true
+          );
+        })();
+      {% endif %}
     </script>
 
     <main
