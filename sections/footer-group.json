@@ -18,8 +18,10 @@
           "type": "email-signup",
           "name": "t:names.email_signup",
           "settings": {
-            "width": "fill",
-            "custom_width": 50,
+            "width": "custom",
+            "custom_width": 60,
+            "width_mobile": "custom",
+            "custom_width_mobile": 100,
             "inherit_color_scheme": true,
             "heading": "",
             "heading_preset": "h3",

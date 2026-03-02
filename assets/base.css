@@ -1469,7 +1469,7 @@ button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
 }
 
 .button-unstyled:hover {
-  background-color: inherit;
+ /*  background-color: inherit; */
 }
 
 .button-unstyled--with-icon {

@@ -5,31 +5,30 @@
 html{
 	overflow: hidden;
 }
-/* Hero: fixed background media on desktop only */
 @media screen and (min-width: 750px) {
-  .hero__media-wrapper.hero__media-wrapper--desktop,
-  .hero__media-wrapper.hero__media-wrapper--mobile {
-    position: fixed !important;
-    inset: 0;
-    z-index: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+  body.coming-soon-mode.is-homepage #header-group {
+    position: absolute;
+    inset: 0 0 auto 0;
+    width: 100%;
+    z-index: 20;
   }
-}
 
-@media screen and (min-width: 750px) {
   body.coming-soon-mode .hero__content-wrapper {
-    padding-top: 48px;
+    min-height: 100svh;
+    padding: clamp(24px, 4vh, 48px) 24px clamp(32px, 5vh, 56px) !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 0 !important;
   }
 
   body.coming-soon-mode .hero__logo {
-    margin-top: 24px;
-    margin-bottom: 12px;
+    width: 100% !important;
+    margin: 0 auto;
   }
 
   body.coming-soon-mode .hero__logo-img {
-    max-width: clamp(260px, 38vw, 640px) !important;
+    width: min(80vw, 680px, 100%) !important;
+    max-width: min(80vw, 680px, 100%) !important;
     margin-inline: auto;
   }
 
@@ -37,8 +36,21 @@ html{
   body.coming-soon-mode .hero__logo-img svg {
     width: 100% !important;
     height: auto !important;
-    max-height: 60vh !important;
+    max-height: none !important;
     top: 0 !important;
+  }
+
+  body.coming-soon-mode .hero__content-wrapper > .spacer-block {
+    display: none !important;
+  }
+
+  body.coming-soon-mode .coming-soon-hero-panel {
+    width: min(92vw, 820px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(14px, 2.4vh, 24px);
+    margin: 0 auto;
   }
 
   html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
@@ -46,20 +58,13 @@ html{
   }
 }
 
-.hero__media-wrapper .hero__media {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-}
-
 /* Section background override: control color and transparency of section backgrounds.
    Add class "section-bg-override" to body (in layout/theme.liquid) to enable.
    Tune with --section-bg-rgb and --section-bg-opacity on body. */
-body.section-bg-override {
+/* body.section-bg-override {
   --section-bg-rgb: 255 255 255;
   --section-bg-opacity: 0.46;
-}
+} */
 
 body.section-bg-override section[class*="color-scheme"],
 body.section-bg-override .section-background[class*="color-scheme"] {
@@ -67,7 +72,7 @@ body.section-bg-override .section-background[class*="color-scheme"] {
 }
 
 /* Hero logo */
-.hero__logo-img svg * {
+.hero__logo-img svg *,.email-signup__button-icon * {
   fill: #00ffcb;
 }
 
@@ -83,16 +88,29 @@ body.section-bg-override .section-background[class*="color-scheme"] {
 }
 /* Hard overrides to force a bright background layer */
 
-body,
-/* .page-width, */
-.content-for-layout {
-  background-color: rgba(0, 255, 213, 0.315) !important;
+body.is-contact-page .mobile-column,
+body.is-contact-page .mobile-column h1,
+body.is-contact-page .mobile-column h2,
+body.is-contact-page .mobile-column h3,
+body.is-contact-page .mobile-column p {
+  color: #00ffcb !important;
+}
+
+@media (max-width: 520px) {
+  /* Lift the contact stack upward on narrow viewports to remove excess top gap */
+  body.is-contact-page main .shopify-section:first-of-type {
+    margin-top: -55px;
+    padding-top: 0 !important;
+  }
+  body.is-contact-page .content-for-layout {
+    padding-top: 0;
+  }
 }
 
 header-component,
 .header-section,
 .header {
-  background-color: rgba(0, 255, 213, 0.315) !important;
+  /* background-color: rgba(0, 255, 213, 0.315) !important; */
   color: #000 !important;
 }
 
@@ -102,30 +120,30 @@ header-component,
 /* .hero__content-wrapper, */
 .section,
 .section-background {
-    background-color: #217d74 !important;
+   /*  background-color: #217d74 !important; */
 }
 
 .announcement-bar,
 .banner,
 .navigation {
-  background-color: rgba(0, 255, 213, 0.315) !important;
+  /* background-color: rgba(0, 255, 213, 0.315) !important; */
   color: #000 !important;
 }
 
-html:not(.shopify-design-mode) body.coming-soon-mode a,
-html:not(.shopify-design-mode) body.coming-soon-mode button,
-html:not(.shopify-design-mode) body.coming-soon-mode summary,
-html:not(.shopify-design-mode) body.coming-soon-mode input,
-html:not(.shopify-design-mode) body.coming-soon-mode select,
-html:not(.shopify-design-mode) body.coming-soon-mode textarea,
-html:not(.shopify-design-mode) body.coming-soon-mode [role="button"] {
-  pointer-events: none !important;
-  cursor: default !important;
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) a,
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) button,
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) summary,
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) input,
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) select,
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) textarea,
+html:not(.shopify-design-mode) body.coming-soon-mode:not(.contact-allowed) [role="button"] {
+  pointer-events: none;
+  cursor: default;
 }
 
-html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
+/* html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
     display: block;
-    width: min(92vw, 765px);
+    width: min(300px,765px);
     margin: 12px auto 0;
     padding: 28px 22px;
     text-align: center;
@@ -134,14 +152,155 @@ html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
     color: #00ffcb;
     text-shadow: 0 0 15px rgba(0, 255, 203, 0.7);
     background: radial-gradient(circle at center, rgb(19 33 65 / 45%), rgba(0, 0, 0, 0.8));
-    /* background-color: rgba(255, 255, 255, 0.72); */
     background-color: transparent;
     border: 1px solid rgba(0, 0, 0, 0.14);
 	top: -80px;
     border-radius: 36px;
-    /* backdrop-filter: blur(10px); */
+} */
+html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
+    display: block;
+    width: 100%;
+    max-width: min(92vw, 775px);
+    margin: 0 auto;
+    padding: 15px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 50;
+    color: #00ffcb;
+    text-shadow: -2px 5px 7px rgb(0 0 0);
+    top: 0;
+    border-radius: 25px;
+	font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+	background: #7000ff4d;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgb(0 0 0 / 47%) 0px -5px 2px inset, rgb(0 0 0 / 47%) 5px 0px 2px inset, rgb(0 0 0 / 47%) -5px 0px 2px inset, rgb(0 0 0 / 47%) 0px 5px 2px inset, rgb(0 0 0 / 44%) -7px 7px 12px 14px;
+    transition: all 300ms;
 }
-.hero__coming-soon {
+
+/* Shared Diamond Dyes form field styling */
+.DD-input-style.DD-input-style {
+  /* background: #7000ff4d; */
+  background: #1c003f82;
+  color: #00ffcb;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgb(0 0 0 / 47%) 0px -5px 2px inset, rgb(0 0 0 / 47%) 5px 0px 2px inset, rgb(0 0 0 / 47%) -5px 0px 2px inset, rgb(0 0 0 / 47%) 0px 5px 2px inset;
+  padding: 14px 16px;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+
+.DD-input-style.DD-input-style::placeholder {
+  color: rgba(0, 255, 203, 0.65);
+}
+
+.DD-input-style.DD-input-style:focus {
+  outline: none;
+  border-color: #00ffcb;
+  box-shadow: 0 0 0 2px rgba(0, 255, 203, 0.4), 0 0 25px rgba(0, 255, 203, 0.35);
+}
+
+.DD-input-style.DD-input-style--joined-input {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.DD-input-style.DD-input-style--joined-button {
+  flex: 0 0 72px;
+  width: 72px;
+  min-width: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 0;
+}
+
+.email-signup__note {
+  /* margin: 8px 0 14px; */
+  color: #00ffcb;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.email-signup-block {
+  max-width: 100%;
+}
+
+.email-signup__form {
+  width: 100%;
+}
+
+.email-signup__input-group.form.is-contact-page.textarea {
+  display: flex !important;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.email-signup__input-group.form.is-contact-page.textarea .email-signup__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  outline-color: transparent;
+}
+
+.email-signup__button.DD-input-style--joined-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.email-signup__button-icon {
+  color: #00ffcb !important;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.email-signup__button-icon svg {
+    width: 100px;
+    height: 100%;
+    padding: 13px;
+    display: block;
+    object-fit: contain;
+    overflow: visible;
+}
+
+.email-signup__button-icon path {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.08);
+}
+
+@media screen and (max-width: 749px) {
+  .DD-input-style.DD-input-style--joined-button {
+    flex-basis: 64px;
+    width: 64px;
+    min-width: 64px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  body.coming-soon-mode.is-contact-page #MainContent {
+    flex: 0 0 auto;
+  }
+
+  body.coming-soon-mode.is-contact-page footer > .shopify-section:not(:first-child) {
+    display: none !important;
+  }
+}
+/* .hero__coming-soon {
     margin: 0 auto 24px;
     text-align: center;
     font-size: clamp(2rem, 5vw, 4.5rem);
@@ -159,21 +318,33 @@ html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
     justify-content: center;
     display: inline-flex;
     align-items: center;
-}
+} */
+
 @media screen and (max-width: 749px) {
-  .hero__media-wrapper.hero__media-wrapper--desktop,
-  .hero__media-wrapper.hero__media-wrapper--mobile {
-    position: absolute !important;
-    inset: 0;
+  body.coming-soon-mode.is-homepage #header-group {
+    position: absolute;
+    inset: 0 0 auto 0;
     width: 100%;
-    height: 100%;
+    z-index: 20;
+  }
+
+  .hero__coming-soon span {
+    display: block;
+  }
+  .hero__coming-soon-divider {
+    width: 40px;
+    border-radius: 999px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.4);
+    margin: 0 12px;
   }
 
   .hero__content-wrapper {
     min-height: 100svh;
-    padding: 84px 20px 28px !important;
-    justify-content: space-between !important;
-    gap: 18px !important;
+    padding: 4px 20px 28px !important;
+	justify-content: flex-start !important;
+    gap: 0 !important;
+    align-items: center !important;
   }
 
   .hero__content-wrapper > .spacer-block {
@@ -181,13 +352,14 @@ html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
   }
 
   .hero__logo {
+    width: 100% !important;
     margin: 0 auto 12px;
-    padding-inline: 14px;
+    padding-inline: 0;
   }
 
   .hero__logo-img {
-    width: 82vw !important;
-    max-width: 320px;
+    width: min(80vw, 680px, 100%) !important;
+    max-width: min(80vw, 680px, 100%) !important;
     margin: 0 auto;
   }
 
@@ -216,9 +388,158 @@ html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
     top: 0;
   }
 
+  body.coming-soon-mode .coming-soon-hero-panel {
+    width: min(100%, 420px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+	margin-top: 0;
+  }
+
   header-component,
   .header-section,
   .header {
     backdrop-filter: blur(8px);
   }
 }
+
+body.coming-soon-mode .hero__content-wrapper button,
+body.coming-soon-mode .hero__content-wrapper a.link {
+  display: none !important;
+}
+
+.hero__coming-soon-link {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.coming-soon-contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 520px);
+  min-height: 46px;
+  color: #00ffcb;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(0, 255, 203, 0.35);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-top: 30px;
+}
+
+
+html:not(.shopify-design-mode) body.coming-soon-mode .coming-soon-contact-link {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+html:not(.shopify-design-mode) body.coming-soon-mode .shopify-section.shopify-section-group-header-group.header-section {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.coming-soon-contact-link{
+	pointer-events: all !important;
+	cursor: pointer !important;
+}
+
+
+@media screen and (min-width: 750px) and (max-height: 820px) {
+	body.coming-soon-mode .hero__content-wrapper {
+	  padding: 18px 24px 24px !important;
+	  justify-content: space-evenly !important;
+	  gap: 0 !important;
+	}
+
+  body.coming-soon-mode .hero__logo-img {
+    width: min(80vw, 680px, 100%) !important;
+    max-width: min(80vw, 680px, 100%) !important;
+  }
+
+  body.coming-soon-mode .hero__logo-img img,
+  body.coming-soon-mode .hero__logo-img svg {
+    max-height: none !important;
+  }
+
+  html:not(.shopify-design-mode) body.coming-soon-mode .hero__coming-soon {
+    max-width: min(86vw, 640px);
+    padding: 12px 16px;
+    font-size: clamp(1.7rem, 4vw, 3.25rem);
+  }
+
+  .coming-soon-contact-link {
+    width: min(100%, 420px);
+    padding: 0.65rem 1.25rem;
+  }
+}
+
+body.is-contact-page #shop-hcaptcha-badge-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: fixed !important;
+  left: auto !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  transform: none !important;
+  transition: none !important;
+  z-index: -1 !important;
+}
+
+@media screen and (max-width: 749px) {
+  body.is-contact-page #shop-hcaptcha-badge-container {
+    display: none !important;
+  }
+}
+
+@keyframes hue-cycle {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(100deg);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+  }
+}
+
+body.DD-background {
+  position: relative;
+  background: transparent;
+  overflow-x: hidden;
+  isolation: isolate;
+}
+
+body.DD-background::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url(https://diamonddyes.com/cdn/shop/files/dye_backkground3.jpg?v=1771310750&width=3840);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  filter: hue-rotate(45deg);
+  animation: hue-cycle 10s linear infinite;
+  transform: translateZ(0);
+  will-change: filter;
+}
+
+
+
+body.coming-soon-mode .hero__logo {
+    /* margin-top: -80px; */
+    position: relative;
+	
+    bottom: 42px;
+  }
+
+

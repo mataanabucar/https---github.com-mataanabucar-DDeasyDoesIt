@@ -2296,6 +2296,12 @@
         "info": "Locks the storefront to the homepage and disables storefront clicks."
       },
       {
+        "type": "image_picker",
+        "id": "coming_soon_background",
+        "label": "Coming soon background image",
+        "info": "Used as the background on the homepage and contact page while Coming soon mode is enabled."
+      },
+      {
         "type": "text",
         "id": "coming_soon_message",
         "label": "Homepage message",

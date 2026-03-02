@@ -473,25 +473,6 @@
     data-blur-shadow="true"
   {% endif %}
 >
-  {% if section.settings.blurred_reflection %}
-    {% unless has_only_video %}
-      <div
-        class="hero__blurred-image hero__blurred-image--desktop"
-        data-testid="hero-blurred-image-desktop"
-      >
-        {{ media_blurred }}
-      </div>
-    {% endunless %}
-    {% if show_mobile_blurred_reflection %}
-      <div
-        class="hero__blurred-image hero__blurred-image--mobile"
-        data-testid="hero-blurred-image-mobile"
-      >
-        {{ mobile_media_blurred }}
-      </div>
-    {% endif %}
-  {% endif %}
-
   {% comment %}
     Hardcoded to section--full-width bc the media has to be full width in all cases.
     hero__content-wrapper applies section_width.
@@ -501,18 +482,9 @@
     class="hero__container spacing-style section section--full-width"
     style="{% render 'spacing-style', settings: section.settings %}"
   >
-    <div
-      class="hero__media-grid"
-      style="--hero-media-count: {{ media_count }};--hero-media-count-mobile: {{ media_count_mobile }};{%- if section.settings.image_1 != blank -%} --hero-media-aspect-ratio: {{ section.settings.image_1.aspect_ratio }};{% endif %}"
-      data-testid="hero-media-wrapper"
-    >
-      {% liquid
-        if section.settings.toggle_overlay
-          render 'overlay', settings: section.settings
-        endif
-      %}
-      {{ media }}
-    </div>
+    {% if section.settings.toggle_overlay %}
+      {% render 'overlay', settings: section.settings, layer: '0' %}
+    {% endif %}
     <div
       class="
         hero__content-wrapper
@@ -533,13 +505,21 @@
           {% render 'hero-logo', logo_color: section.settings.logo_color %}
         </div>
       </div>
-      {% if settings.coming_soon_mode and settings.coming_soon_message != blank %}
-        <p class="hero__coming-soon">{{ settings.coming_soon_message }}</p>
-      {% endif %}
       {% content_for 'blocks' %}
+      {% if settings.coming_soon_mode %}
+        <div class="coming-soon-hero-panel">
+          <div class="hero__coming-soon">
+            <span>Coming Spring</span>
+            {% comment %} <div class="hero__coming-soon-divider" aria-hidden="true"></div> {% endcomment %}
+			<hr style="border: none;margin: 5px;">
+            <span>2026</span>
+          </div>
+          <a href="/pages/contact" class="coming-soon-contact-link">Contact us</a>
+        </div>
+      {% endif %}
     </div>
   </div>
-</div>
+</div> 
 
 {% stylesheet %}
   .hero-wrapper {
@@ -630,6 +610,16 @@
     justify-content: center;
     display: inline-flex;
     align-items: center;
+  }
+  .hero__coming-soon span {
+    display: block;
+  }
+  .hero__coming-soon-divider {
+    width: 40px;
+    border-radius: 999px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.4);
+    margin: 0 12px;
   }
 
   .hero__content-wrapper .group-block-content {

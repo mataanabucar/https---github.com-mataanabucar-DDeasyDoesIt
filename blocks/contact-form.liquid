@@ -58,7 +58,7 @@
       <input
         type="text"
         id="ContactForm-name"
-        class="contact-form__input"
+        class="contact-form__input DD-input-style"
         autocomplete="name"
         name="contact[name]"
         value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
@@ -75,7 +75,7 @@
       <input
         type="email"
         id="ContactForm-email"
-        class="contact-form__input"
+        class="contact-form__input DD-input-style"
         autocomplete="email"
         name="contact[email]"
         spellcheck="false"
@@ -99,7 +99,7 @@
     <input
       type="tel"
       id="ContactForm-phone"
-      class="contact-form__input"
+      class="contact-form__input DD-input-style"
       autocomplete="tel"
       name="contact[phone]"
       pattern="[0-9\-]*"
@@ -116,7 +116,7 @@
     <textarea
       rows="10"
       id="ContactForm-body"
-      class="contact-form__input contact-form__input--textarea"
+      class="contact-form__input contact-form__input--textarea DD-input-style"
       name="contact[body]"
       placeholder="{{ 'blocks.contact_form.comment' | t }}"
     >
