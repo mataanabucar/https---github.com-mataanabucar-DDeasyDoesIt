@@ -1,0 +1,138 @@
+/**
+ * Custom styles
+ * Add your own CSS below.
+ */
+
+/* Hero: fixed background media on desktop only */
+@media screen and (min-width: 750px) {
+  .hero__media-wrapper.hero__media-wrapper--desktop,
+  .hero__media-wrapper.hero__media-wrapper--mobile {
+    position: fixed !important;
+    inset: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+.hero__media-wrapper .hero__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Section background override: control color and transparency of section backgrounds.
+   Add class "section-bg-override" to body (in layout/theme.liquid) to enable.
+   Tune with --section-bg-rgb and --section-bg-opacity on body. */
+body.section-bg-override {
+  --section-bg-rgb: 255 255 255;
+  --section-bg-opacity: 0.46;
+}
+
+body.section-bg-override section[class*="color-scheme"],
+body.section-bg-override .section-background[class*="color-scheme"] {
+  background-color: rgb(var(--section-bg-rgb) / var(--section-bg-opacity));
+}
+
+/* Hero logo */
+.hero__logo-img svg * {
+  fill: #00ffcb;
+}
+
+.hero__logo-img svg {
+  display: block;
+  filter: drop-shadow(rgba(0, 0, 0, 0.7) -19px 16px 4px) !important;
+}
+
+.hero__logo-img svg {
+  display: block;
+  position: relative !important;
+  top: -91px !important;
+}
+/* Hard overrides to force a bright background layer */
+
+body,
+/* .page-width, */
+.content-for-layout {
+  background-color: rgba(0, 255, 213, 0.315) !important;
+}
+
+header-component,
+.header-section,
+.header {
+  background-color: rgba(0, 255, 213, 0.315) !important;
+  color: #000 !important;
+}
+
+.slideshow,
+.slideshow-container,
+.slideshow__slide,
+/* .hero__content-wrapper, */
+.section,
+.section-background {
+    background-color: #217d74 !important;
+}
+
+.announcement-bar,
+.banner,
+.navigation {
+  background-color: rgba(0, 255, 213, 0.315) !important;
+  color: #000 !important;
+}
+
+@media screen and (max-width: 749px) {
+  .hero__media-wrapper.hero__media-wrapper--desktop,
+  .hero__media-wrapper.hero__media-wrapper--mobile {
+    position: absolute !important;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__content-wrapper {
+    min-height: 100svh;
+    padding: 84px 20px 28px !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+  }
+
+  .hero__content-wrapper > .spacer-block {
+    display: none !important;
+  }
+
+  .hero__logo {
+    margin: 0 auto 12px;
+    padding-inline: 14px;
+  }
+
+  .hero__logo-img {
+    width: 82vw !important;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .hero__logo-img img,
+  .hero__logo-img svg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    top: 0 !important;
+	filter: drop-shadow(rgba(0, 0, 0, 1) -6px 11px 3px) !important;
+  }
+
+  .hero__content-wrapper > a.link {
+    align-self: center;
+    display: inline-flex;
+    justify-content: center;
+    width: auto !important;
+    margin-inline: auto;
+  }
+
+  header-component,
+  .header-section,
+  .header {
+    backdrop-filter: blur(8px);
+  }
+}

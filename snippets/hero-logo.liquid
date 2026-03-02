@@ -1,0 +1,14 @@
+{% comment %}
+  Renders the Diamond Dyes text logo as inline SVG so fill color can be controlled.
+  Usage: {% render 'hero-logo', logo_color: section.settings.logo_color %}
+{% endcomment %}
+{%- assign logo_fill = logo_color | default: '#ff9501' -%}
+{%- assign fill_attr = 'fill="' | append: logo_fill | append: '"' -%}
+{%- assign svg_open_tag = '<svg role="img" aria-label="' | append: shop.name | append: '" ' -%}
+{%- assign svg_content = 'DiamonDyes Text Logo.svg' | inline_asset_content
+  | replace: 'fill="#ff9501"', fill_attr
+  | replace: '<?xml version="1.0" encoding="UTF-8" ?>', ''
+  | replace: '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">', ''
+  | replace: '<svg ', svg_open_tag
+  | strip -%}
+{{ svg_content | strip_newlines }}

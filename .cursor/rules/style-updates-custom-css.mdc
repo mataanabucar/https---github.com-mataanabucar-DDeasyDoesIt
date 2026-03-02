@@ -1,0 +1,31 @@
+---
+description: When updating styles, add to customstyle.css and migrate related styles from theme files
+globs: "**/*.liquid,**/*.css,assets/*.css,sections/**/*.liquid,snippets/**/*.liquid"
+alwaysApply: true
+---
+
+# Style updates – use custom CSS and consolidate
+
+When the user asks to **update style**, **change styling**, **add CSS**, or similar:
+
+1. **Add all new or changed styles to `assets/customstyle.css`**
+   - Do not add one-off style blocks in sections/snippets for these updates.
+   - Append to `customstyle.css` with a short comment (e.g. `/* Section/feature name */`) so updates are easy to find.
+
+2. **Remove and transfer related styles**
+   - Find any **existing** styles that are related or depend on the change (same component, same section, or styles that the new CSS replaces or overrides).
+   - **Remove** those from their current locations:
+     - `{% stylesheet %}` or `{% style %}` in sections/blocks/snippets
+     - Inline `style="..."` that can be moved to a class
+     - Scoped CSS in section/block Liquid that duplicates or conflicts with the update
+   - **Transfer** them into `assets/customstyle.css` (merge with the new styles, keep selectors that still apply, remove true duplicates).
+
+3. **Keep in theme files only when necessary**
+   - Leave styles in section/snippet files only if they are:
+     - Truly dynamic (depend on Liquid variables/settings and cannot be expressed in a static CSS file), or
+     - Required by theme architecture (e.g. critical above-the-fold section CSS that must stay scoped).
+   - Prefer moving static, override, or “custom look” styles to `customstyle.css`.
+
+4. **Reference**
+   - Custom stylesheet: `assets/customstyle.css`
+   - It is loaded in `snippets/stylesheets.liquid` after `base.css`, so custom rules override theme defaults when specificity is equal.
