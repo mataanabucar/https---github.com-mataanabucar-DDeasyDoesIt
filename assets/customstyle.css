@@ -10,8 +10,9 @@ html {
 /* Default: lock scroll for coming-soon surfaces; allow scroll when contact is allowed */
 body:not(.contact-allowed) {
   overflow-y: hidden;
+  overscroll-behavior-y: none;
 }
-body .contact-allowed{
+body.coming-soon-mode.is-contact-page{
 	overflow-y: auto !important;
 }
 @media screen and (min-width: 750px) {
