@@ -3,16 +3,26 @@
   assign coming_soon_mode = settings.coming_soon_mode
   assign is_homepage = false
   assign contact_allowed = false
+  assign html_classes = ''
   if template.name == 'index' or request.path == routes.root_url
     assign is_homepage = true
   endif
   if request.path contains '/pages/contact'
     assign contact_allowed = true
   endif
+  if request.design_mode
+    assign html_classes = 'shopify-design-mode'
+  endif
+  if coming_soon_mode and is_homepage
+    if html_classes != ''
+      assign html_classes = html_classes | append: ' '
+    endif
+    assign html_classes = html_classes | append: 'coming-soon-homepage'
+  endif
 %}
 <html
-  {% if request.design_mode %}
-    class="shopify-design-mode"
+  {% if html_classes != '' %}
+    class="{{ html_classes }}"
   {% endif %}
   lang="{{ request.locale.iso_code }}"
 >
@@ -142,6 +152,17 @@
           headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
         }
       })();
+
+      {% if coming_soon_mode and request.design_mode == false and is_homepage %}
+        (function lockComingSoonHomepageScroll() {
+          function preventScroll(event) {
+            event.preventDefault();
+          }
+
+          document.addEventListener('touchmove', preventScroll, { passive: false });
+          document.addEventListener('wheel', preventScroll, { passive: false });
+        })();
+      {% endif %}
 
       {% if coming_soon_mode and request.design_mode == false and contact_allowed == false %}
         (function lockComingSoonNavigation() {

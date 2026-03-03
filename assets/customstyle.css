@@ -8,9 +8,19 @@ html {
 }
 
 /* Lock scroll only on the coming-soon homepage */
+html.coming-soon-homepage,
+html.coming-soon-homepage body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  height: 100%;
+  touch-action: none;
+}
+
 body.coming-soon-mode.is-homepage {
-  overflow-y: hidden;
-  overscroll-behavior-y: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  min-height: 100svh;
 }
 
 body.coming-soon-mode:not(.is-homepage) {
@@ -535,7 +545,7 @@ body.DD-background::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: url(https://diamonddyes.com/cdn/shop/files/dye_backkground3.jpg?v=1771310750&width=3840);
+  background-image: url(https://diamonddyes.com/cdn/shop/files/dye_backkground3.webp?v=1771310750&width=3840);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
