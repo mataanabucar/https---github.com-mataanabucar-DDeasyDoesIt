@@ -61,7 +61,7 @@
 		"variant_button_border_width": 1,
 		"variant_button_radius": 2,
 		"variant_button_width": "equal-width-buttons",
-		"coming_soon_mode": true,
+		"coming_soon_mode": false,
 		"coming_soon_message": "Coming Spring 2026",
 		"color_schemes": {
 			"scheme-1": {
