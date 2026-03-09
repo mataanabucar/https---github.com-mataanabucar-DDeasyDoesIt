@@ -16,6 +16,9 @@
     "
   >
     {% content_for 'blocks' %}
+    {% if page.handle == 'gallery' %}
+      {% render 'gallery-page-grid' %}
+    {% endif %}
   </div>
 </div>
 

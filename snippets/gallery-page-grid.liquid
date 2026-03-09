@@ -1,0 +1,466 @@
+{% liquid
+  assign gallery_images = 'Gallery Dress Pink Tie Dye Diamond Dye.webp|Gallery Dress Pink White Tie Diamond Dye.webp|Gallery Dress Yellow Brown Tie Diamond Dye.webp|Gallery Shorts Pink Blue Tie Diamond Dye.webp|Gallery Shorts Pink Red Tie Diamond Dye.webp|Gallery Shorts Pink White Tie Diamond Dye.webp|Gallery T Shirt Blue Green Diamond Dye.webp|Gallery T Shirt Blue Orange Diamond Dye.webp|Gallery T Shirt Blue Purple Diamond Dye.webp|Gallery T Shirt Blue Tie Diamond Dye.webp|Gallery T Shirt Blue White Diamond Dye.webp|Gallery T Shirt Blue Yellow Diamond Dye.webp|Gallery T Shirt Brown Orange Diamond Dye.webp|Gallery T Shirt Brown White Diamond Dye.webp|Gallery T Shirt Green Blue Diamond Dye.webp|Gallery T Shirt Green Orange Diamond Dye.webp|Gallery T Shirt Green Tie Diamond Dye.webp|Gallery T Shirt Orange Brown Diamond Dye.webp|Gallery T Shirt Orange White Diamond Dye.webp|Gallery T Shirt Pink Orange Diamond Dye.webp|Gallery T Shirt Pink Purple Diamond Dye.webp|Gallery T Shirt Pink Red Diamond Dye.webp|Gallery T Shirt Pink Tie Diamond Dye.webp|Gallery T Shirt Purple Blue Diamond Dye.webp|Gallery T Shirt Purple Red Diamond Dye.webp|Gallery T Shirt White Brown Diamond Dye.webp|Gallery T Shirt White Tie Diamond Dye.webp|Gallery T Shirt Yellow Blue Diamond Dye.webp|Gallery T Shirt Yellow Brown Diamond Dye.webp|Gallery Top Black Tie Dye Diamond Dye.webp|Gallery Top Blue Black Tie Diamond Dye.webp|Gallery Top Blue Green Tie Diamond Dye.webp|Gallery Top Blue Purple Tie Diamond Dye.webp|Gallery Top Blue Tie Dye Diamond Dye.webp|Gallery Top Orange Brown Tie Diamond Dye.webp|Gallery Top Pink Blue Tie Diamond Dye.webp|Gallery Top Pink Purple Tie Diamond Dye.webp|Gallery Top Pink Tie Dye Diamond Dye.webp|Gallery Top White Tie Dye Diamond Dye.webp' | split: '|'
+  assign first_image_name = gallery_images.first | strip
+  assign first_image_title = first_image_name | remove: '.webp' | remove: 'Gallery '
+  assign first_image_src = first_image_name | asset_url
+%}
+
+<script
+  src="{{ 'gallery-lightbox.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+<gallery-lightbox class="page-gallery" data-gallery-count="{{ gallery_images.size }}">
+  <div class="page-gallery__surface">
+    <div class="page-gallery__summary">
+      <p>{{ gallery_images.size }} hand-dyed looks across dresses, shorts, tees, and tops.</p>
+    </div>
+
+    <ul class="page-gallery__grid list-unstyled" role="list">
+      {% for image_name in gallery_images %}
+        {% assign image_name = image_name | strip %}
+        {% assign image_title = image_name | remove: '.webp' | remove: 'Gallery ' %}
+        {% assign image_src = image_name | asset_url %}
+        <li class="page-gallery__item">
+          <figure class="page-gallery__card">
+            <button
+              type="button"
+              class="button button-unstyled page-gallery__trigger"
+              on:click="/openFromTrigger/{{ forloop.index0 }}"
+              on:pointerenter="/preload/{{ forloop.index0 }}"
+              aria-haspopup="dialog"
+              aria-label="Open full view of {{ image_title | escape }}"
+              data-gallery-trigger
+              data-gallery-src="{{ image_src }}"
+              data-gallery-alt="{{ image_title | escape }}"
+              data-gallery-title="{{ image_title | escape }}"
+              ref="triggers[]"
+            >
+              <img
+                src="{{ image_src }}"
+                alt="{{ image_title | escape }}"
+                class="page-gallery__image"
+                loading="lazy"
+              >
+            </button>
+          </figure>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <dialog
+    ref="dialog"
+    class="page-gallery__dialog dialog-modal"
+    aria-labelledby="gallery-lightbox-title"
+    on:keydown="/handleKeyDown"
+  >
+    <div class="page-gallery__dialog-shell">
+      <div class="page-gallery__dialog-header">
+        <div class="page-gallery__dialog-copy">
+          <p class="page-gallery__dialog-counter" ref="counter">1 / {{ gallery_images.size }}</p>
+          <h2 class="page-gallery__dialog-title" id="gallery-lightbox-title" ref="title">
+            {{ first_image_title }}
+          </h2>
+        </div>
+
+        <button
+          type="button"
+          class="button button-unstyled close-button page-gallery__dialog-close"
+          aria-label="{{ 'actions.close' | t }}"
+          on:click="/closeDialog"
+        >
+          {{ 'icon-close.svg' | inline_asset_content }}
+        </button>
+      </div>
+
+      <div class="page-gallery__dialog-viewer">
+        <button
+          type="button"
+          class="button button-unstyled page-gallery__nav page-gallery__nav--prev"
+          aria-label="Show previous gallery image"
+          on:click="/showPrevious"
+        >
+          <span class="page-gallery__nav-icon page-gallery__nav-icon--prev" aria-hidden="true">
+            {{ 'icon-arrow.svg' | inline_asset_content }}
+          </span>
+        </button>
+
+        <div class="page-gallery__dialog-stage">
+          <img
+            ref="image"
+            src="{{ first_image_src }}"
+            alt="{{ first_image_title | escape }}"
+            class="page-gallery__dialog-image"
+          >
+        </div>
+
+        <button
+          type="button"
+          class="button button-unstyled page-gallery__nav page-gallery__nav--next"
+          aria-label="Show next gallery image"
+          on:click="/showNext"
+        >
+          <span class="page-gallery__nav-icon" aria-hidden="true">
+            {{ 'icon-arrow.svg' | inline_asset_content }}
+          </span>
+        </button>
+      </div>
+
+      <div class="page-gallery__dialog-thumbs" aria-label="Gallery thumbnails">
+        {% for image_name in gallery_images %}
+          {% assign image_name = image_name | strip %}
+          {% assign image_title = image_name | remove: '.webp' | remove: 'Gallery ' %}
+          {% assign image_src = image_name | asset_url %}
+          <button
+            type="button"
+            class="button button-unstyled page-gallery__dialog-thumb"
+            aria-label="Show {{ image_title | escape }}"
+            aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            {% if forloop.first %}
+              data-active="true"
+            {% endif %}
+            on:click="/selectIndex/{{ forloop.index0 }}"
+            on:pointerenter="/preload/{{ forloop.index0 }}"
+            ref="thumbs[]"
+          >
+            <img
+              src="{{ image_src }}"
+              alt=""
+              class="page-gallery__dialog-thumb-image"
+              loading="lazy"
+            >
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+  </dialog>
+</gallery-lightbox>
+
+<style>
+  .page-gallery {
+    --gallery-breakout-width: min(calc(100vw - clamp(1rem, 4vw, 3.5rem)), 108rem);
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    width: 100%;
+    max-width: 74rem;
+    margin-inline: auto;
+  }
+
+  .page-gallery__surface {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    padding: clamp(1rem, 1.8vw, 1.75rem);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
+    border-radius: calc(var(--product-corner-radius, var(--card-corner-radius, 2px)) + 6px);
+    background: rgb(var(--color-background-rgb) / 0.84);
+    box-shadow: 0 1.5rem 3rem rgb(var(--color-foreground-rgb) / 0.08);
+    backdrop-filter: blur(18px);
+  }
+
+  .page-gallery__summary {
+    max-width: 40rem;
+    color: rgb(var(--color-foreground-rgb) / 0.74);
+  }
+
+  .page-gallery__summary p,
+  .page-gallery__dialog-counter,
+  .page-gallery__dialog-title {
+    margin: 0;
+  }
+
+  .page-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.6vw, 1.25rem);
+    margin: 0;
+    padding: 0;
+  }
+
+  .page-gallery__item {
+    min-width: 0;
+  }
+
+  .page-gallery__card {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border-radius: var(--product-corner-radius, var(--card-corner-radius, 2px));
+    background: rgb(var(--color-foreground-rgb) / 0.04);
+    transition: transform var(--animation-speed-slow, 0.3s) var(--animation-easing, ease),
+      box-shadow var(--animation-speed-slow, 0.3s) var(--animation-easing, ease);
+  }
+
+  .page-gallery__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .page-gallery__item:hover .page-gallery__card,
+  .page-gallery__item:focus-within .page-gallery__card {
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 2rem rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .page-gallery__trigger {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  .page-gallery__image,
+  .page-gallery__dialog-thumb-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .page-gallery__image {
+    transition: transform var(--animation-speed-slow, 0.3s) var(--animation-easing, ease);
+  }
+
+  .page-gallery__item:hover .page-gallery__image,
+  .page-gallery__item:focus-within .page-gallery__image {
+    transform: scale(1.03);
+  }
+
+  .page-gallery__trigger:focus-visible,
+  .page-gallery__dialog-thumb:focus-visible,
+  .page-gallery__nav:focus-visible,
+  .page-gallery__dialog-close:focus-visible {
+    outline: 2px solid rgb(var(--color-foreground-rgb));
+    outline-offset: 4px;
+  }
+
+  .page-gallery__dialog {
+    width: min(92vw, 82rem);
+    max-width: 82rem;
+    max-height: min(92dvh, 58rem);
+    padding: clamp(0.875rem, 1.8vw, 1.5rem);
+    overflow: hidden;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    background: rgb(var(--color-background-rgb) / 0.96);
+  }
+
+  .page-gallery__dialog::backdrop {
+    background: rgb(var(--backdrop-color-rgb) / 0.88);
+    backdrop-filter: blur(18px);
+  }
+
+  .page-gallery__dialog-shell {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(0.875rem, 1.5vw, 1.25rem);
+    height: 100%;
+    min-height: 0;
+  }
+
+  .page-gallery__dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .page-gallery__dialog-copy {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .page-gallery__dialog-counter {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.58);
+  }
+
+  .page-gallery__dialog-title {
+    font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+    line-height: 1.1;
+  }
+
+  .page-gallery__dialog-close {
+    position: relative;
+    inset: auto;
+    color: var(--color-foreground);
+  }
+
+  .page-gallery__dialog-viewer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+    min-height: 0;
+  }
+
+  .page-gallery__dialog-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    height: 100%;
+    padding: clamp(0.5rem, 1vw, 1rem);
+    border-radius: calc(var(--product-corner-radius, var(--card-corner-radius, 2px)) + 4px);
+    background:
+      radial-gradient(circle at top, rgb(var(--color-foreground-rgb) / 0.05), transparent 55%),
+      rgb(var(--color-foreground-rgb) / 0.03);
+  }
+
+  .page-gallery__dialog-image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: min(68dvh, 42rem);
+    object-fit: contain;
+  }
+
+  .page-gallery__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(2.75rem, 4vw, 3.25rem);
+    height: clamp(2.75rem, 4vw, 3.25rem);
+    border-radius: 999px;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    background: rgb(var(--color-background-rgb) / 0.84);
+    box-shadow: 0 0.5rem 1.2rem rgb(var(--color-foreground-rgb) / 0.08);
+    color: var(--color-foreground);
+    transition: transform var(--animation-speed, 0.2s) var(--animation-easing, ease),
+      background var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .page-gallery__nav:hover {
+    transform: translateY(-1px);
+    background: rgb(var(--color-background-rgb));
+  }
+
+  .page-gallery__nav-icon {
+    display: inline-flex;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .page-gallery__nav-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .page-gallery__nav-icon--prev {
+    transform: scaleX(-1);
+  }
+
+  .page-gallery__dialog-thumbs {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(4.75rem, 6rem);
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 0 0 0.25rem;
+    scrollbar-width: thin;
+  }
+
+  .page-gallery__dialog-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--product-corner-radius, var(--card-corner-radius, 2px));
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    background: rgb(var(--color-foreground-rgb) / 0.04);
+    transition: transform var(--animation-speed, 0.2s) var(--animation-easing, ease),
+      border-color var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .page-gallery__dialog-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgb(var(--color-background-rgb) / 0.2);
+    pointer-events: none;
+  }
+
+  .page-gallery__dialog-thumb[data-active='true'] {
+    transform: translateY(-2px);
+    border-color: rgb(var(--color-foreground-rgb) / 0.48);
+  }
+
+  @media screen and (min-width: 750px) {
+    .page-gallery__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .page-gallery {
+      width: var(--gallery-breakout-width);
+      max-width: none;
+      margin-inline: calc((100% - var(--gallery-breakout-width)) / 2);
+    }
+
+    .page-gallery__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1500px) {
+    .page-gallery__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .page-gallery__dialog {
+      width: 100dvw;
+      max-width: 100dvw;
+      max-height: 100dvh;
+      height: 100dvh;
+      padding: 0.875rem 0.75rem 1rem;
+      border-radius: 0;
+    }
+
+    .page-gallery__dialog-shell {
+      gap: 0.75rem;
+    }
+
+    .page-gallery__dialog-viewer {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-areas:
+        'stage stage'
+        'prev next';
+      gap: 0.75rem;
+    }
+
+    .page-gallery__dialog-stage {
+      grid-area: stage;
+      min-height: 0;
+    }
+
+    .page-gallery__dialog-image {
+      max-height: min(58dvh, 30rem);
+    }
+
+    .page-gallery__nav {
+      width: 100%;
+      height: 3rem;
+    }
+
+    .page-gallery__nav--prev {
+      grid-area: prev;
+    }
+
+    .page-gallery__nav--next {
+      grid-area: next;
+    }
+
+    .page-gallery__dialog-thumbs {
+      grid-auto-columns: minmax(4rem, 4.75rem);
+      gap: 0.5rem;
+    }
+  }
+</style>

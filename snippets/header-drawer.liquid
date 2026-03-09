@@ -15,6 +15,20 @@
   assign block_settings = block.settings
   assign max_featured_items = 4
   assign image_border_radius = block_settings.image_border_radius
+  assign gallery_page_url = '/pages/gallery'
+  assign on_gallery_page = false
+  assign has_gallery_link = false
+
+  if request.page_type == 'page' and page.handle == 'gallery'
+    assign on_gallery_page = true
+  endif
+
+  for link in linklist.links
+    if link.handle == 'gallery' or link.url == gallery_page_url
+      assign has_gallery_link = true
+      break
+    endif
+  endfor
 
   if block_settings.menu_style == 'featured_collections'
     assign ratio = block_settings.featured_collections_aspect_ratio
@@ -245,6 +259,23 @@
                 {% endif %}
               </li>
             {%- endfor -%}
+            {% unless has_gallery_link %}
+              <li
+                style="--menu-drawer-animation-index: {{ linklist.links.size | plus: 1 }};"
+                class="{%- if block_settings.drawer_accordion -%}menu-drawer__list-item--deep{%- else -%}menu-drawer__list-item--flat{%- endif -%}{% if block_settings.drawer_dividers %} menu-drawer__list-item--divider{% endif %}"
+              >
+                <a
+                  id="HeaderDrawer-gallery"
+                  href="{{ gallery_page_url }}"
+                  class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if on_gallery_page %} menu-drawer__menu-item--active{% endif %}"
+                  {% if on_gallery_page %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  <span class="menu-drawer__menu-item-text wrap-text">Gallery</span>
+                </a>
+              </li>
+            {% endunless %}
           {% else %}
             {%- comment -%}
               Handle menus with 3 levels of links
@@ -562,6 +593,23 @@
                 {%- endif -%}
               </li>
             {%- endfor -%}
+            {% unless has_gallery_link %}
+              <li
+                class="menu-drawer__list-item"
+                style="--menu-drawer-animation-index: {{ linklist.links.size | plus: 1 }};"
+              >
+                <a
+                  id="HeaderDrawer-gallery"
+                  href="{{ gallery_page_url }}"
+                  class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if on_gallery_page %} menu-drawer__menu-item--active{% endif %}"
+                  {% if on_gallery_page %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  <span class="menu-drawer__menu-item-text wrap-text">Gallery</span>
+                </a>
+              </li>
+            {% endunless %}
           {% endif %}
         </ul>
       </nav>
