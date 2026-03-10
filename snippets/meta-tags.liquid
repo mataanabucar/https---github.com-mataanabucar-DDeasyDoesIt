@@ -21,7 +21,8 @@
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
-  assign og_image_url = 'https:' | append: 'DD-social-Share-Image-sized.png' | asset_url
+  assign og_image_path = 'Social Media Share image.jpg' | asset_url
+  assign og_image_url = request.origin | append: og_image_path
 
   if request.page_type == 'product'
     assign og_type = 'product'
@@ -64,6 +65,10 @@
   property="og:image:secure_url"
   content="{{ og_image_url }}"
 >
+<meta
+  property="og:image:alt"
+  content="{{ shop.name | escape }}"
+>
 
 {%- if request.page_type == 'product' -%}
   <meta
@@ -89,6 +94,10 @@
 <meta
   name="twitter:image"
   content="{{ og_image_url }}"
+>
+<meta
+  name="twitter:image:alt"
+  content="{{ shop.name | escape }}"
 >
 <meta
   name="twitter:title"
