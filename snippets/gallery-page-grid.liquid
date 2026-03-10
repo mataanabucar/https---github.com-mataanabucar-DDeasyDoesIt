@@ -12,9 +12,22 @@
 ></script>
 
 <gallery-lightbox class="page-gallery" data-gallery-count="{{ gallery_images.size }}">
+  <header class="page-gallery__masthead">
+    <div class="page-gallery__logo">
+      {% render 'hero-logo', logo_color: '#00ffcb' %}
+    </div>
+
+    <h1 class="page-gallery__subtitle">{{ page.title | default: 'Gallery' }}</h1>
+
+    <nav class="page-gallery__links" aria-label="Gallery navigation">
+      <a href="{{ routes.root_url }}" class="page-gallery__utility-link DD-input-style">Home</a>
+      <a href="/pages/contact" class="page-gallery__utility-link DD-input-style">Contact</a>
+    </nav>
+  </header>
+
   <div class="page-gallery__surface">
     <div class="page-gallery__summary">
-      <p>{{ gallery_images.size }} hand-dyed looks across dresses, shorts, tees, and tops.</p>
+		<p>Explore a curated preview of Diamond Dyes one-of-a-kind pieces.<br> For custom orders, please get in touch.<br> Limited ready-to-shop releases are coming soon.</p>
     </div>
 
     <ul class="page-gallery__grid list-unstyled" role="list">
@@ -87,7 +100,12 @@
           </span>
         </button>
 
-        <div class="page-gallery__dialog-stage">
+        <div
+          ref="stage"
+          class="page-gallery__dialog-stage"
+          data-zoomed="false"
+          data-panning="false"
+        >
           <img
             ref="image"
             src="{{ first_image_src }}"
@@ -142,10 +160,63 @@
   .page-gallery {
     --gallery-breakout-width: min(calc(100vw - clamp(1rem, 4vw, 3.5rem)), 108rem);
     display: grid;
-    gap: clamp(1rem, 2vw, 1.75rem);
+    gap: clamp(1.25rem, 2.5vw, 2rem);
     width: 100%;
     max-width: 74rem;
     margin-inline: auto;
+  }
+
+  .page-gallery__masthead {
+    display: grid;
+    justify-items: center;
+    gap: clamp(0.85rem, 1.8vw, 1.25rem);
+    padding-top: clamp(1rem, 2.5vw, 2rem);
+  }
+
+  .page-gallery__logo {
+    width: min(84vw, 26rem);
+  }
+
+  .page-gallery__logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-inline: auto;
+    filter: drop-shadow(rgba(0, 0, 0, 0.7) -19px 16px 4px);
+  }
+
+  .page-gallery__subtitle {
+    margin: 0;
+    color: #00ffcb;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    text-shadow: -2px 5px 7px rgb(0 0 0);
+  }
+
+  .page-gallery__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+  }
+
+  .page-gallery__utility-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: clamp(8.5rem, 16vw, 10.5rem);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #00ffcb;
+  }
+
+  .page-gallery__utility-link:hover {
+    color: #00ffcb;
+    transform: translateY(-1px);
   }
 
   .page-gallery__surface {
@@ -161,7 +232,12 @@
 
   .page-gallery__summary {
     max-width: 40rem;
+    margin-inline: auto;
     color: rgb(var(--color-foreground-rgb) / 0.74);
+    text-align: center;
+  }
+  .page-gallery__summary p{
+	font-weight: 700;
   }
 
   .page-gallery__summary p,
@@ -301,16 +377,20 @@
   }
 
   .page-gallery__dialog-stage {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 0;
     height: 100%;
     padding: clamp(0.5rem, 1vw, 1rem);
+    overflow: hidden;
     border-radius: calc(var(--product-corner-radius, var(--card-corner-radius, 2px)) + 4px);
     background:
       radial-gradient(circle at top, rgb(var(--color-foreground-rgb) / 0.05), transparent 55%),
       rgb(var(--color-foreground-rgb) / 0.03);
+    cursor: zoom-in;
+    touch-action: manipulation;
   }
 
   .page-gallery__dialog-image {
@@ -319,6 +399,22 @@
     max-width: 100%;
     max-height: min(68dvh, 42rem);
     object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+    will-change: transform;
+    transform-origin: var(--gallery-zoom-origin-x, 50%) var(--gallery-zoom-origin-y, 50%);
+    transform: translate3d(var(--gallery-zoom-pan-x, 0px), var(--gallery-zoom-pan-y, 0px), 0)
+      scale(var(--gallery-zoom-scale, 1));
+    transition: transform 180ms ease, transform-origin 180ms ease;
+  }
+
+  .page-gallery__dialog-stage[data-zoomed='true'] {
+    cursor: zoom-out;
+    touch-action: none;
+  }
+
+  .page-gallery__dialog-stage[data-panning='true'] {
+    cursor: grabbing;
   }
 
   .page-gallery__nav {
@@ -415,6 +511,30 @@
   }
 
   @media screen and (max-width: 749px) {
+    .page-gallery {
+      gap: 0.9rem;
+    }
+
+    .page-gallery__masthead {
+      gap: 0.65rem;
+      padding-top: 0.2rem;
+    }
+
+    .page-gallery__logo {
+      width: min(76vw, 20rem);
+    }
+
+    .page-gallery__links {
+      display: grid;
+      width: min(100%, 28rem);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .page-gallery__utility-link {
+      width: 100%;
+      min-width: 0;
+    }
+
     .page-gallery__dialog {
       width: 100dvw;
       max-width: 100dvw;
@@ -461,6 +581,72 @@
     .page-gallery__dialog-thumbs {
       grid-auto-columns: minmax(4rem, 4.75rem);
       gap: 0.5rem;
+    }
+  }
+
+  @media screen and (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-height: 540px) {
+    .page-gallery {
+      gap: 0.75rem;
+    }
+
+    .page-gallery__masthead {
+      gap: 0.4rem;
+      padding-top: 0;
+    }
+
+    .page-gallery__logo {
+      width: min(42vw, 14rem);
+    }
+
+    .page-gallery__subtitle {
+      font-size: clamp(0.95rem, 3vh, 1.15rem);
+    }
+
+    .page-gallery__links {
+      gap: 0.55rem;
+    }
+
+    .page-gallery__utility-link {
+      min-width: 7rem;
+      padding: 0.55rem 1rem;
+    }
+
+    .page-gallery__dialog {
+      padding-block-end: 0.75rem;
+    }
+
+    .page-gallery__dialog-shell {
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .page-gallery__dialog-viewer {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas: none;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .page-gallery__dialog-stage {
+      grid-area: auto;
+      padding: 0.25rem;
+    }
+
+    .page-gallery__dialog-image {
+      max-height: min(78dvh, calc(100dvh - 8rem));
+    }
+
+    .page-gallery__nav {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .page-gallery__nav--prev,
+    .page-gallery__nav--next {
+      grid-area: auto;
+    }
+
+    .page-gallery__dialog-thumbs {
+      display: none;
     }
   }
 </style>

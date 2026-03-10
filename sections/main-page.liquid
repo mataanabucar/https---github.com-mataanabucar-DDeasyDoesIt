@@ -15,9 +15,10 @@
       {% render 'spacing-style', settings: section.settings %}
     "
   >
-    {% content_for 'blocks' %}
     {% if page.handle == 'gallery' %}
       {% render 'gallery-page-grid' %}
+    {% else %}
+      {% content_for 'blocks' %}
     {% endif %}
   </div>
 </div>

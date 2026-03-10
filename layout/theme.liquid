@@ -3,12 +3,19 @@
   assign coming_soon_mode = settings.coming_soon_mode
   assign is_homepage = false
   assign contact_allowed = false
+  assign coming_soon_page_allowed = false
+  assign is_gallery_page = false
   assign html_classes = ''
   if template.name == 'index' or request.path == routes.root_url
     assign is_homepage = true
   endif
   if request.path contains '/pages/contact'
     assign contact_allowed = true
+    assign coming_soon_page_allowed = true
+  endif
+  if request.path contains '/pages/gallery'
+    assign coming_soon_page_allowed = true
+    assign is_gallery_page = true
   endif
   if request.design_mode
     assign html_classes = 'shopify-design-mode'
@@ -58,12 +65,12 @@
 
     {{ content_for_header }}
 
-    {% if coming_soon_mode and request.design_mode == false and is_homepage == false %}
+    {% if coming_soon_mode and request.design_mode == false and is_homepage == false and coming_soon_page_allowed == false %}
       <script>
         (function () {
           var path = window.location.pathname || '';
-          var allowedContactPaths = ['/pages/contact', '/pages/contact-us'];
-          var isAllowed = allowedContactPaths.some(function (segment) {
+          var allowedComingSoonPaths = ['/pages/contact', '/pages/contact-us', '/pages/gallery'];
+          var isAllowed = allowedComingSoonPaths.some(function (segment) {
             return path.indexOf(segment) > -1;
           });
           if (isAllowed) return;
@@ -73,7 +80,7 @@
     {% endif %}
   </head>
 
-  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} section-bg-override DD-background{% if coming_soon_mode %} coming-soon-mode{% endif %}{% if is_homepage %} is-homepage{% endif %}{% if contact_allowed %} contact-allowed is-contact-page{% endif %}">
+  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }} section-bg-override DD-background{% if coming_soon_mode %} coming-soon-mode{% endif %}{% if is_homepage %} is-homepage{% endif %}{% if coming_soon_page_allowed %} coming-soon-page-allowed{% endif %}{% if contact_allowed %} contact-allowed is-contact-page{% endif %}{% if is_gallery_page %} is-gallery-page{% endif %}">
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
     <div id="header-group">
       {% sections 'header-group' %}
@@ -155,22 +162,34 @@
 
       {% if coming_soon_mode and request.design_mode == false and is_homepage %}
         (function lockComingSoonHomepageScroll() {
+          const allowDesktopScrollQuery = window.matchMedia('(min-width: 750px) and (max-height: 820px)');
+
           function preventScroll(event) {
             event.preventDefault();
           }
 
-          document.addEventListener('touchmove', preventScroll, { passive: false });
-          document.addEventListener('wheel', preventScroll, { passive: false });
+          function syncHomepageScrollLock() {
+            document.removeEventListener('touchmove', preventScroll);
+            document.removeEventListener('wheel', preventScroll);
+
+            if (allowDesktopScrollQuery.matches) return;
+
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+            document.addEventListener('wheel', preventScroll, { passive: false });
+          }
+
+          syncHomepageScrollLock();
+          allowDesktopScrollQuery.addEventListener('change', syncHomepageScrollLock);
         })();
       {% endif %}
 
-      {% if coming_soon_mode and request.design_mode == false and contact_allowed == false %}
+      {% if coming_soon_mode and request.design_mode == false and coming_soon_page_allowed == false %}
         (function lockComingSoonNavigation() {
           document.addEventListener(
             'click',
             function (event) {
               const target = event.target.closest('a, button, summary, input, select, textarea, [role="button"]');
-              if (target?.closest('.coming-soon-contact-link')) return;
+              if (target?.closest('.coming-soon-utility-link')) return;
               if (!target) return;
               event.preventDefault();
               event.stopPropagation();

@@ -508,13 +508,14 @@
       {% content_for 'blocks' %}
       {% if settings.coming_soon_mode %}
         <div class="coming-soon-hero-panel">
+          <a href="/pages/gallery" class="coming-soon-gallery-link coming-soon-utility-link">View gallery</a>
           <div class="hero__coming-soon">
             <span>Coming Spring</span>
             {% comment %} <div class="hero__coming-soon-divider" aria-hidden="true"></div> {% endcomment %}
 			<hr style="border: none;margin: 5px;">
             <span>2026</span>
           </div>
-          <a href="/pages/contact" class="coming-soon-contact-link">Contact us</a>
+          <a href="/pages/contact" class="coming-soon-contact-link coming-soon-utility-link">Contact us</a>
         </div>
       {% endif %}
     </div>
