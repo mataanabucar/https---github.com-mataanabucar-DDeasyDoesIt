@@ -3,6 +3,8 @@
   assign first_image_name = gallery_images.first | strip
   assign first_image_title = first_image_name | remove: '.webp' | remove: 'Gallery '
   assign first_image_src = first_image_name | asset_url
+  assign gallery_image_width = 1584
+  assign gallery_image_height = 1584
 %}
 
 <script
@@ -32,9 +34,8 @@
 
     <ul class="page-gallery__grid list-unstyled" role="list">
       {% for image_name in gallery_images %}
-        {% assign image_name = image_name | strip %}
-        {% assign image_title = image_name | remove: '.webp' | remove: 'Gallery ' %}
-        {% assign image_src = image_name | asset_url %}
+        {% assign clean_image_name = image_name | strip %}
+        {% assign image_title = clean_image_name | remove: '.webp' | remove: 'Gallery ' %}
         <li class="page-gallery__item">
           <figure class="page-gallery__card">
             <button
@@ -45,16 +46,18 @@
               aria-haspopup="dialog"
               aria-label="Open full view of {{ image_title | escape }}"
               data-gallery-trigger
-              data-gallery-src="{{ image_src }}"
+              data-gallery-src="{{ clean_image_name | asset_url }}"
               data-gallery-alt="{{ image_title | escape }}"
               data-gallery-title="{{ image_title | escape }}"
               ref="triggers[]"
             >
               <img
-                src="{{ image_src }}"
+                src="{{ clean_image_name | asset_url }}"
                 alt="{{ image_title | escape }}"
                 class="page-gallery__image"
                 loading="lazy"
+                width="{{ gallery_image_width }}"
+                height="{{ gallery_image_height }}"
               >
             </button>
           </figure>
@@ -111,6 +114,8 @@
             src="{{ first_image_src }}"
             alt="{{ first_image_title | escape }}"
             class="page-gallery__dialog-image"
+            width="{{ gallery_image_width }}"
+            height="{{ gallery_image_height }}"
           >
         </div>
 
@@ -128,9 +133,8 @@
 
       <div class="page-gallery__dialog-thumbs" aria-label="Gallery thumbnails">
         {% for image_name in gallery_images %}
-          {% assign image_name = image_name | strip %}
-          {% assign image_title = image_name | remove: '.webp' | remove: 'Gallery ' %}
-          {% assign image_src = image_name | asset_url %}
+          {% assign clean_thumb_name = image_name | strip %}
+          {% assign image_title = clean_thumb_name | remove: '.webp' | remove: 'Gallery ' %}
           <button
             type="button"
             class="button button-unstyled page-gallery__dialog-thumb"
@@ -144,10 +148,12 @@
             ref="thumbs[]"
           >
             <img
-              src="{{ image_src }}"
+              src="{{ clean_thumb_name | asset_url }}"
               alt=""
               class="page-gallery__dialog-thumb-image"
               loading="lazy"
+              width="{{ gallery_image_width }}"
+              height="{{ gallery_image_height }}"
             >
           </button>
         {% endfor %}
