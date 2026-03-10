@@ -62,9 +62,13 @@
   content="{{ og_image_url }}"
 >
 <meta
+  property="og:image:type"
+  content="image/png"
+>
+{% comment %} <meta
   property="og:image:alt"
   content="{{ shop.name | escape }}"
->
+> {% endcomment %}
 
 {%- if request.page_type == 'product' -%}
   <meta
