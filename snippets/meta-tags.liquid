@@ -1,129 +1,60 @@
 <meta charset="utf-8">
-<meta
-  http-equiv="X-UA-Compatible"
-  content="IE=edge"
->
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1"
->
-<meta
-  name="view-transition"
-  content="same-origin"
->
-<meta
-  name="theme-color"
-  content=""
->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="view-transition" content="same-origin">
+<meta name="theme-color" content="#000000">
 
 {%- liquid
 	assign og_title = page_title | default: shop.name
 	assign og_url = canonical_url | default: request.origin
 	assign og_type = 'website'
 	assign og_description = page_description | default: shop.description | default: shop.name
-	assign og_image_url = 'https://cdn.shopify.com/s/files/1/0676/6136/5383/files/image_800x800.png?v=1773159554'
+
+	# default share image (homepage / fallback)
+	assign og_image_url = 'https://cdn.shopify.com/s/files/1/0676/6136/5383/files/BG_1200x630v2_0809eadd-463d-4380-863c-b431bd478537.png'
 
 	if request.page_type == 'product'
 		assign og_type = 'product'
+		assign og_image_url = product.featured_image | image_url: width: 1200
 	elsif request.page_type == 'article'
 		assign og_type = 'article'
-	elsif request.page_type == 'password'
-		assign og_url = request.origin
+		assign og_image_url = article.image | image_url: width: 1200
+	elsif request.page_type == 'collection'
+		assign og_image_url = collection.image | image_url: width: 1200
 	endif
 -%}
 
-<meta
-  property="og:site_name"
-  content="{{ shop.name }}"
->
-<meta
-  property="og:url"
-  content="{{ og_url }}"
->
-<meta
-  property="og:title"
-  content="{{ og_title | escape }}"
->
-<meta
-  property="og:type"
-  content="{{ og_type }}"
->
-<meta
-  property="og:description"
-  content="{{ og_description | escape }}"
->
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description | escape }}">
 
-<meta
-  property="og:image"
-  content="{{ og_image_url }}"
->
-<meta
-  property="og:image:secure_url"
-  content="{{ og_image_url }}"
->
-<meta
-  property="og:image:type"
-  content="image/png"
->
-{% comment %} <meta
-  property="og:image:alt"
-  content="{{ shop.name | escape }}"
-> {% endcomment %}
+<meta property="og:image" content="{{ og_image_url }}">
+<meta property="og:image:secure_url" content="{{ og_image_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ shop.name | escape }}">
 
 {%- if request.page_type == 'product' -%}
-  <meta
-    property="og:price:amount"
-    content="{{ product.price | money_without_currency | strip_html }}"
-  >
-  <meta
-    property="og:price:currency"
-    content="{{ cart.currency.iso_code }}"
-  >
+<meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+<meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
 {%- endif -%}
 
-{%- if settings.social_twitter_link != blank -%}
-  <meta
-    name="twitter:site"
-    content="{{ settings.social_twitter_link | split: 'twitter.com/' | last | prepend: '@' }}"
-  >
-{%- endif -%}
-
-<meta
-  name="twitter:card"
-  content="summary_large_image"
->
-<meta
-  name="twitter:image"
-  content="{{ og_image_url }}"
->
-<meta
-  name="twitter:image:alt"
-  content="{{ shop.name | escape }}"
->
-<meta
-  name="twitter:title"
-  content="{{ og_title | escape }}"
->
-<meta
-  name="twitter:description"
-  content="{{ og_description | escape }}"
->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">
+<meta name="twitter:image" content="{{ og_image_url }}">
 
 <title>
-  {{ page_title }}
-  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+{{ page_title }}
+{%- if current_tags %} – tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+{%- if current_page != 1 %} – Page {{ current_page }}{% endif -%}
+{%- unless page_title contains shop.name %} – {{ shop.name }}{% endunless -%}
 </title>
 
-<link
-  rel="canonical"
-  href="{{ canonical_url }}"
->
+<link rel="canonical" href="{{ canonical_url }}">
 
 {% if page_description %}
-  <meta
-    name="description"
-    content="{{ page_description | escape }}"
-  >
+<meta name="description" content="{{ page_description | escape }}">
 {% endif %}
